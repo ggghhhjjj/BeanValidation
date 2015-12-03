@@ -33,5 +33,6 @@
     <modules>
         <module>CustomConstraint</module>
         <module>JPAPersistenceLifeCycle</module>
+        <module>JPACustomValidation</module>
     </modules>
 </project>
