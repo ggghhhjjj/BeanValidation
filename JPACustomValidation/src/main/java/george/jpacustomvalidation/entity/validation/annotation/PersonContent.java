@@ -23,23 +23,29 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-package george.jpacustomvalidation.service.exceptions;
+package george.jpacustomvalidation.entity.validation.annotation;
 
-import java.util.ArrayList;
-import java.util.List;
+import george.jpacustomvalidation.entity.validation.FirstLastPair;
+import java.lang.annotation.Documented;
+import static java.lang.annotation.ElementType.FIELD;
+import static java.lang.annotation.ElementType.METHOD;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+import javax.validation.Constraint;
+import javax.validation.Payload;
 
-public class IllegalOrphanException extends Exception {
-    private List<String> messages;
-    public IllegalOrphanException(List<String> messages) {
-        super((messages != null && messages.size() > 0 ? messages.get(0) : null));
-        if (messages == null) {
-            this.messages = new ArrayList<String>();
-        }
-        else {
-            this.messages = messages;
-        }
-    }
-    public List<String> getMessages() {
-        return messages;
-    }
+/**
+ *
+ * @author george
+ */
+@Documented
+@Constraint(validatedBy = PersonContentValidator.class)
+@Target({METHOD, FIELD})
+@Retention(RetentionPolicy.RUNTIME)
+public @interface PersonContent {
+    String message() default "Person has illegal first and last name pair.";
+    Class<?>[] groups() default {};
+    Class<? extends Payload>[] payload() default{};
+    FirstLastPair[] value() default {FirstLastPair.GEORGE,  FirstLastPair.LILI};
 }

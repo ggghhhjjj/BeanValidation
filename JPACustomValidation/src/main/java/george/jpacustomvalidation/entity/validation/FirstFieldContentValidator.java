@@ -23,23 +23,40 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-package george.jpacustomvalidation.service.exceptions;
+package george.jpacustomvalidation.entity.validation;
 
-import java.util.ArrayList;
-import java.util.List;
+import george.jpacustomvalidation.entity.validation.annotation.FirstFieldContent;
+import java.util.Arrays;
+import javax.validation.ConstraintValidator;
+import javax.validation.ConstraintValidatorContext;
 
-public class IllegalOrphanException extends Exception {
-    private List<String> messages;
-    public IllegalOrphanException(List<String> messages) {
-        super((messages != null && messages.size() > 0 ? messages.get(0) : null));
-        if (messages == null) {
-            this.messages = new ArrayList<String>();
-        }
-        else {
-            this.messages = messages;
-        }
+/**
+ *
+ * @author George Shumakov <george.shumakov@gmail.com>
+ */
+public class FirstFieldContentValidator implements ConstraintValidator<FirstFieldContent, String> {
+    private Iterable<String> allowedNames = null;
+    
+    @Override
+    public void initialize(FirstFieldContent constraintAnnotation) {
+        allowedNames = Arrays.asList(constraintAnnotation.value());
     }
-    public List<String> getMessages() {
-        return messages;
+
+    @Override
+    public boolean isValid(String value, ConstraintValidatorContext context) {
+        if (null == value) {
+            return false;
+        }
+        
+        if (null == allowedNames) {
+            return true;
+        }
+        
+        for (final String name : allowedNames) {
+            if (name.equals(value)) return true;
+        }
+        
+        return false;
     }
+    
 }

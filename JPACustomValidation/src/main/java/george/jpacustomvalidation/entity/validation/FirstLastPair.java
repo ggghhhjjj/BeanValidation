@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (c) 2015, george
  * All rights reserved.
  *
@@ -23,23 +23,23 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-package george.jpacustomvalidation.service.exceptions;
+package george.jpacustomvalidation.entity.validation;
 
-import java.util.ArrayList;
-import java.util.List;
+/**
+ *
+ * @author george
+ */
+public enum FirstLastPair {
+    GEORGE("Shumakov"),
+    LILI("red");
 
-public class IllegalOrphanException extends Exception {
-    private List<String> messages;
-    public IllegalOrphanException(List<String> messages) {
-        super((messages != null && messages.size() > 0 ? messages.get(0) : null));
-        if (messages == null) {
-            this.messages = new ArrayList<String>();
-        }
-        else {
-            this.messages = messages;
-        }
+    private final String last;
+
+    FirstLastPair(String last) {
+        this.last = last;
     }
-    public List<String> getMessages() {
-        return messages;
+    
+    String getLast() {
+        return last;
     }
 }

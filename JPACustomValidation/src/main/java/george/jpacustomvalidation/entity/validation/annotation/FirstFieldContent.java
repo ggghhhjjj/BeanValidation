@@ -23,23 +23,30 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-package george.jpacustomvalidation.service.exceptions;
+package george.jpacustomvalidation.entity.validation.annotation;
 
-import java.util.ArrayList;
-import java.util.List;
+import george.jpacustomvalidation.entity.validation.FirstFieldContentValidator;
+import java.lang.annotation.Documented;
+import java.lang.annotation.Retention;
+import java.lang.annotation.Target;
+import static java.lang.annotation.ElementType.METHOD;
+import static java.lang.annotation.ElementType.FIELD;
+import java.lang.annotation.RetentionPolicy;
 
-public class IllegalOrphanException extends Exception {
-    private List<String> messages;
-    public IllegalOrphanException(List<String> messages) {
-        super((messages != null && messages.size() > 0 ? messages.get(0) : null));
-        if (messages == null) {
-            this.messages = new ArrayList<String>();
-        }
-        else {
-            this.messages = messages;
-        }
-    }
-    public List<String> getMessages() {
-        return messages;
-    }
+import javax.validation.Constraint;
+import javax.validation.Payload;
+
+/**
+ *
+ * @author George Shumakov <george.shumakov@gmail.com>
+ */
+@Documented
+@Constraint(validatedBy = FirstFieldContentValidator.class)
+@Target({METHOD, FIELD})
+@Retention(RetentionPolicy.RUNTIME)
+public @interface FirstFieldContent {
+    String message() default "First name has unallowed content.";
+    Class<?>[] groups() default {};
+    Class<? extends Payload>[] payload() default{};
+    String[] value() default {"George", "Lili", "Dimana", "Viara"};
 }
