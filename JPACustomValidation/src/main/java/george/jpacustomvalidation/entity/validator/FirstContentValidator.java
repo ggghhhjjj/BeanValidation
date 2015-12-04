@@ -13,7 +13,7 @@ import javax.validation.ConstraintValidatorContext;
  *
  * @author George Shumakov <george.shumakov@gmail.com>
  */
-class FirstContentValidator implements ConstraintValidator<FirstContent, String> {
+public class FirstContentValidator implements ConstraintValidator<FirstContent, String> {
     private Iterable<String> allowedNames = null;
     
     @Override

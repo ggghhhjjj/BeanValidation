@@ -27,7 +27,7 @@ public class Person implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     @Column(name = "FIRST_NAME", length = 25, nullable = false)
-    @FirstContent ({"A","B", "C"})
+    @FirstContent
     private String first;
     @Column(name = "LAST_NAME", length = 25, nullable = false)
     private String last;
