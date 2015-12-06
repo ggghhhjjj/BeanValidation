@@ -6,9 +6,7 @@
 package george.jpapersistencelifecycle.entity;
 
 import george.jpapersistencelifecycle.entity.audit.Audit;
-import george.jpapersistencelifecycle.service.exceptions.IllegalOrphanException;
 import java.io.Serializable;
-import java.util.ArrayList;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
 import javax.persistence.GeneratedValue;
@@ -22,7 +20,6 @@ import javax.persistence.PrePersist;
 import javax.persistence.PreRemove;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
-import org.eclipse.persistence.exceptions.ValidationException;
 
 /**
  *

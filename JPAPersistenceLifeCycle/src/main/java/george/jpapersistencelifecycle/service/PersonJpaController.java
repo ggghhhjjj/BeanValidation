@@ -6,13 +6,11 @@
 package george.jpapersistencelifecycle.service;
 
 import george.jpapersistencelifecycle.entity.Person;
-import george.jpapersistencelifecycle.service.exceptions.IllegalOrphanException;
 import george.jpapersistencelifecycle.service.exceptions.NonexistentEntityException;
 import java.io.Serializable;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.persistence.EntityExistsException;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Query;
@@ -20,7 +18,7 @@ import javax.persistence.EntityNotFoundException;
 import javax.persistence.Persistence;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
-import org.eclipse.persistence.exceptions.ValidationException;
+import javax.validation.ConstraintViolationException;
 
 /**
  *
@@ -38,19 +36,18 @@ public class PersonJpaController extends Thread implements Serializable {
 
             Person p1 = new Person("George", "Shumakov");
             ctrl.create(p1);
-            System.out.println("p1 " + p1);
             Person p2 = new Person("Dimana", "Shumakova");
             p2.setId(p1.getId());
+            Person pStore = new Person("My name", "Yours name");
             try {
+
                 ctrl.edit(p2);
-                System.out.println("p1 " + p1);
-                System.out.println("p2 " + p2);
+                p2.setFirstName("Viara");
+                ctrl.edit(p2);
                 ctrl.destroy(p2.getId());
-                System.out.println("p1 " + p1);
-                System.out.println("p2 " + p2);
                 Person p3 = ctrl.findPerson(p1.getId());
                 System.out.println("p3 " + p3);
-
+                ctrl.create(pStore);
             } catch (NonexistentEntityException ex) {
                 Logger.getLogger(PersonJpaController.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -82,13 +79,15 @@ public class PersonJpaController extends Thread implements Serializable {
     }
 
     public void create(Person person) {
+        System.out.println("Going to create an entity...");
         EntityManager em = null;
         try {
             em = getEntityManager();
             em.getTransaction().begin();
             em.persist(person);
             em.getTransaction().commit();
-        } catch (IllegalOrphanException ex) {
+        } catch (ConstraintViolationException ex) {
+            em.getTransaction().rollback();
             System.out.println("---------- validation exception -----------");
         } finally {
             if (em != null) {
@@ -98,6 +97,7 @@ public class PersonJpaController extends Thread implements Serializable {
     }
 
     public void edit(Person person) throws NonexistentEntityException {
+        System.out.println("Going to edit an entity ...");
         EntityManager em = null;
         try {
             em = getEntityManager();
@@ -105,6 +105,7 @@ public class PersonJpaController extends Thread implements Serializable {
             person = em.merge(person);
             em.getTransaction().commit();
         } catch (Exception ex) {
+            em.getTransaction().rollback();
             String msg = ex.getLocalizedMessage();
             if (msg == null || msg.length() == 0) {
                 Long id = person.getId();
@@ -121,6 +122,7 @@ public class PersonJpaController extends Thread implements Serializable {
     }
 
     public void destroy(Long id) throws NonexistentEntityException {
+        System.out.println("Going to desroy an entity ...");
         EntityManager em = null;
         try {
             em = getEntityManager();
@@ -130,6 +132,7 @@ public class PersonJpaController extends Thread implements Serializable {
                 person = em.getReference(Person.class, id);
                 person.getId();
             } catch (EntityNotFoundException enfe) {
+                em.getTransaction().rollback();
                 throw new NonexistentEntityException("The person with id " + id + " no longer exists.", enfe);
             }
             em.remove(person);
