@@ -26,9 +26,9 @@
 package george.jpacustomvalidation.entity.validation.annotation;
 
 import george.jpacustomvalidation.entity.validation.FirstLastPair;
+import george.jpacustomvalidation.entity.validation.ForbiddenPersonContentValidator;
 import java.lang.annotation.Documented;
-import static java.lang.annotation.ElementType.FIELD;
-import static java.lang.annotation.ElementType.METHOD;
+import static java.lang.annotation.ElementType.TYPE;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
@@ -40,10 +40,10 @@ import javax.validation.Payload;
  * @author george
  */
 @Documented
-@Constraint(validatedBy = PersonContentValidator.class)
-@Target({METHOD, FIELD})
+@Constraint(validatedBy = ForbiddenPersonContentValidator.class)
+@Target({TYPE})
 @Retention(RetentionPolicy.RUNTIME)
-public @interface PersonContent {
+public @interface ForbiddenPersonContent {
     String message() default "Person has illegal first and last name pair.";
     Class<?>[] groups() default {};
     Class<? extends Payload>[] payload() default{};

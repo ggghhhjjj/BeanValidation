@@ -33,6 +33,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import george.jpacustomvalidation.entity.validation.annotation.FirstFieldContent;
+import george.jpacustomvalidation.entity.validation.annotation.ForbiddenPersonContent;
 
 /**
  *
@@ -40,6 +41,7 @@ import george.jpacustomvalidation.entity.validation.annotation.FirstFieldContent
  */
 @Entity
 @Table(name = "PERSON_JPACV")
+@ForbiddenPersonContent
 public class Person implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -90,6 +92,8 @@ public class Person implements Serializable {
     public int hashCode() {
         int hash = 0;
         hash += (id != null ? id.hashCode() : 0);
+        hash += (first != null ? first.hashCode() : 0);
+        hash += (last != null ? last.hashCode() : 0);
         return hash;
     }
 

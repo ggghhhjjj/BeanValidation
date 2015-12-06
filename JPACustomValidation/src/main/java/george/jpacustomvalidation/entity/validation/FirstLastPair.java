@@ -30,15 +30,21 @@ package george.jpacustomvalidation.entity.validation;
  * @author george
  */
 public enum FirstLastPair {
-    GEORGE("Shumakov"),
-    LILI("red");
+    GEORGE("George", "Shumakov"),
+    LILI("Lili", "red");
 
+    private final String first;
     private final String last;
 
-    FirstLastPair(String last) {
+    private FirstLastPair(String first, String last) {
+        this.first = first;
         this.last = last;
     }
-    
+
+    public String getFirst() {
+        return first;
+    }
+
     String getLast() {
         return last;
     }

@@ -12,6 +12,8 @@
       <!-- eclipselink specific parameters -->
       <property name="eclipselink.logging.level.sql" value="FINE"/>
       <property name="eclipselink.logging.parameters" value="true"/>
+      <property name="eclipselink.logging.level" value="FINE" />
+      <property name="eclipselink.logging.session" value="true" />
     </properties>
   </persistence-unit>
 </persistence>

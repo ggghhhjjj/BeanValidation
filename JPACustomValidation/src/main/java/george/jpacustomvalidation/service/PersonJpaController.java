@@ -49,12 +49,47 @@ public class PersonJpaController implements Serializable {
         EntityManagerFactory emf = Persistence.createEntityManagerFactory("JPACustomValidation");
         PersonJpaController ctrl = new PersonJpaController(emf);
 
+        //fails because "Georgi" is not allowed by FirstFieldContent annotation
         Person p1 = new Person("Georgi", "Shumakov");
         try {
-        ctrl.create(p1);
-        } catch (ConstraintViolationException  ex) {
-            System.out.println("Validation canstraint exception occured.");
+            ctrl.create(p1);
+        } catch (ConstraintViolationException ex) {
+            System.out.println("FirstFieldContent validation canstraint exception occured.");
         }
+
+        //fails because "George" "Shumakov" pair is forbidden by ForbiddenPersonContent
+        //annotation
+        Person p2 = new Person("George", "Shumakov");
+        try {
+            ctrl.create(p2);
+        } catch (ConstraintViolationException ex) {
+            System.out.println("ForbiddenPersonContent validation canstraint exception occured.");
+        }
+
+        Person p3 = new Person("George", "Vladimirov");
+        Person p4 = new Person("George", "Vladimirov");
+        try {
+            //store in one session
+            ctrl.create(p3, p4);
+        } catch (ConstraintViolationException ex) {
+            System.out.println("Unknown validation canstraint exception occured.");
+        }
+        
+        //store in separate sessions
+        Person p5 = new Person("George", "Ptkov");
+        Person p6 = new Person("George", "Ptkov1");
+        try {
+            ctrl.create(p5);
+        } catch (ConstraintViolationException ex) {
+            System.out.println("Unknown validation canstraint exception occured.");
+        }
+        try {
+            ctrl.create(p6);
+        } catch (ConstraintViolationException ex) {
+            System.out.println("Unknown validation canstraint exception occured.");
+        }
+        
+
     }
 
     public PersonJpaController(EntityManagerFactory emf) {
@@ -66,16 +101,20 @@ public class PersonJpaController implements Serializable {
         return emf.createEntityManager();
     }
 
-    public void create(Person person) {
-        EntityManager em = null;
-        try {
-            em = getEntityManager();
-            em.getTransaction().begin();
-            em.persist(person);
-            em.getTransaction().commit();
-        } finally {
-            if (em != null) {
-                em.close();
+    public void create(Person... persons) {
+        if (null != persons && persons.length > 0) {
+            EntityManager em = null;
+            try {
+                em = getEntityManager();
+                em.getTransaction().begin();
+                for (final Person person : persons) {
+                    em.persist(person);
+                }
+                em.getTransaction().commit();
+            } finally {
+                if (em != null) {
+                    em.close();
+                }
             }
         }
     }
