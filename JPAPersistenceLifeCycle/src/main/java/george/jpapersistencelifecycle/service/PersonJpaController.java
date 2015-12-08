@@ -87,7 +87,9 @@ public class PersonJpaController extends Thread implements Serializable {
             em.persist(person);
             em.getTransaction().commit();
         } catch (ConstraintViolationException ex) {
-            em.getTransaction().rollback();
+            if (null != em) {
+                em.getTransaction().rollback();
+            }
             System.out.println("---------- validation exception -----------");
         } finally {
             if (em != null) {
